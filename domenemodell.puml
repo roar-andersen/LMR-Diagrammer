@@ -1,0 +1,347 @@
+@startuml
+
+  
+
+package Felles {
+    object PasientlisteTilBehandling {
+      🔑 Guid MeldingsId
+    }
+
+    object RekvirentlisteTilBehandling {
+      🔑 Guid MeldingsId
+    }
+
+    object Utlevering {
+      🔑 int UtleveringsId
+    }
+    Utlevering --> Utleveringsmelding : MeldingsId
+
+    object Utleveringsmelding {
+      🔑 Guid MeldingsId
+    }
+
+    object KodeverkKode {
+      🔑 int KodeverkKodeId      
+    }
+
+    object Klassifikasjon {
+      🔑 int KlassifikasjonId      
+    }
+
+    object Enum_Kilde {
+      🔑 byte Id
+    }
+
+    object Enum_Meldingstyper {
+      🔑 int Id
+    }
+
+    object Enum_Status {
+      🔑 int Id
+    }
+
+    object Enum_Utleveringsstatus {
+      🔑 int Id
+    }
+
+    object Enum_Utleveringstype {
+      🔑 byte Id
+    }
+}
+
+
+package Eik {
+
+    object "Apoteksystem" as Eik_Apoteksystem {
+      🔑 Guid ApoteksystemId
+    }
+
+    object "Kodeverk_Feltstatus" as Eik_Kodeverk_Feltstatus {
+      🔑 int Id
+    }
+
+    object "Enum_Refusjonskodetype" as Eik_Enum_Refusjonskodetype {
+      🔑 int Id
+    }
+
+    object "Enum_UtleveringTil" as Eik_Enum_UtleveringTil {
+      🔑 int Id
+    }
+
+    object "OneOf_Hjemmel" as Eik_OneOf_Hjemmel {
+      🔑 int Id
+    }
+
+    object "OneOf_Bestanddeltype" as Eik_OneOf_Bestanddeltype {
+      🔑 int Id
+    }
+
+    object "OneOf_Mengdetype" as Eik_OneOf_Mengdetype {
+      🔑 int Id
+    }
+
+    object "OneOf_RekvirertVaretype" as Eik_OneOf_RekvirertVaretype {
+      🔑 int Id
+    }
+
+    object "OneOf_Varetype" as Eik_OneOf_Varetype {
+      🔑 int Id
+    }
+
+    object "BestanddelAnnet_Kryptert" as Eik_BestanddelAnnet_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "Legemiddelblanding_Kryptert" as Eik_Legemiddelblanding_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "LegemiddelMerkevare_Kryptert" as Eik_LegemiddelMerkevare_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "Legemiddelpakning_Kryptert" as Eik_Legemiddelpakning_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "LegemiddelVirkestoff_Kryptert" as Eik_LegemiddelVirkestoff_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "Lokalvare_Kryptert" as Eik_Lokalvare_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "RekvisisjonAvventerProsessering" as Eik_RekvisisjonAvventerProsessering #F0C0C0 {
+      🔑 Guid RekvisisjonsId
+    }
+    Eik_RekvisisjonAvventerProsessering --> Utleveringsmelding : MeldingsId
+
+    object "Resept_Kryptert" as Eik_Resept_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "UtleveringAvventerProsessering" as Eik_UtleveringAvventerProsessering #F0C0C0 {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    Eik_UtleveringAvventerProsessering --> Utleveringsmelding : MeldingsId
+
+    object "UtleveringTil_Kryptert" as Eik_UtleveringTil_Kryptert #F0C0C0 {
+      🔑 Guid KryptertId
+    }
+
+    object "Legemiddelblanding" as Eik_Legemiddelblanding {
+      🔑 Guid LegemiddelblandingId
+    }
+    Eik_Legemiddelblanding --> Eik_Legemiddelblanding_Kryptert : KryptertFeltId
+
+
+    object "Lokalvare" as Eik_Lokalvare {
+      🔑 Guid LokalvareId
+    }
+    Eik_Lokalvare --> Eik_Lokalvare_Kryptert : KryptertId
+
+    object "UtlevertVare" as Eik_UtlevertVare {
+      🔑 Guid UtlevertVareId
+    }
+    Eik_UtlevertVare --> "0..1" Eik_Lokalvare : LokalvareId
+    Eik_UtlevertVare --> "0..1" Eik_Legemiddelblanding : LegemiddelblandingId
+
+
+    object "Rekvisisjon" as Eik_Rekvisisjon {
+      🔑 Guid RekvisisjonId
+    }
+    Eik_Rekvisisjon --> "0..1" Eik_Apoteksystem : ApoteksystemId
+
+    object "InstitusjonsIdentitet" as Eik_InstitusjonsIdentitet {
+      🔑 Guid InstitusjonsIdentitetId
+    }
+    Eik_InstitusjonsIdentitet --> "0..1" Eik_Rekvisisjon : RekvisisjonId
+
+    object "BestanddelAnnet" as Eik_BestanddelAnnet {
+      🔑 Guid BestanddelAnnetId
+    }
+    Eik_BestanddelAnnet --> Eik_Legemiddelblanding : LegemiddelblandingId
+    Eik_BestanddelAnnet --> "0..1" Eik_BestanddelAnnet_Kryptert : KryptertId
+
+    object "Kodeverk_FeltOid" as Eik_Kodeverk_FeltOid {
+      🔑 string Feltnavn
+      🔑 int OId
+    }
+
+    object "Pasient" as Eik_Pasient {
+      🔑 Guid PasientId
+    }
+
+    object "UtleveringTilMenneske" as Eik_UtleveringTilMenneske {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringTilMenneske --> Utlevering : UtleveringsId
+    Eik_UtleveringTilMenneske --> "0..1" Eik_Apoteksystem : ApoteksystemId
+    Eik_UtleveringTilMenneske -->  Eik_UtlevertVare : UtlevertVareId
+    Eik_UtleveringTilMenneske -->  "0..1" Eik_Pasient : PasientFraApotekPasientId
+    Eik_UtleveringTilMenneske -->  "0..1" Eik_UtleveringTil_Kryptert : BruksveiledningKryptertId
+    Eik_UtleveringTilMenneske -->  "0..1" Eik_Resept : ReseptId
+
+    object "Refusjon" as Eik_Refusjon {
+      🔑 int UtleveringsId
+    }
+    Eik_Refusjon --> Eik_UtleveringTilMenneske : UtleveringsId
+
+
+    object "Resept" as Eik_Resept {
+      🔑 Guid ReseptId
+    }
+    Eik_Resept --> Eik_Resept_Kryptert : RekvirertVare_LegemiddelblandingNavnKryptertId
+    ' object "RekvirertVare" as Eik_RekvirertVare
+    ' Eik_Resept *-- Eik_RekvirertVare
+    ' object "RekvirentFraApotek" as Eik_RekvirentFraApotek
+    ' Eik_Resept *-- Eik_RekvirentFraApotek
+
+    object "UtleveringFraRekvisisjon" as Eik_UtleveringFraRekvisisjon {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringFraRekvisisjon --> Utlevering : UtleveringsId
+    Eik_UtleveringFraRekvisisjon --> Eik_Rekvisisjon : RekvisisjonId
+    Eik_UtleveringFraRekvisisjon --> Eik_UtlevertVare : UtlevertVareId
+
+    object "UtleveringTilDyr" as Eik_UtleveringTilDyr {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringTilDyr --> Utlevering : UtleveringsId
+    Eik_UtleveringTilDyr --> Eik_UtlevertVare : UtlevertVareId
+    Eik_UtleveringTilDyr --> "0..1" Eik_Resept : ReseptId
+    Eik_UtleveringTilDyr --> "0..1" Eik_UtleveringTil_Kryptert : BruksveiledningKryptertId
+    Eik_UtleveringTilDyr --> "0..1" Eik_Apoteksystem : ApoteksystemId
+
+    object "LegemiddelMerkevare" as Eik_LegemiddelMerkevare {
+      🔑 Guid LegemiddelMerkevareId
+    }
+    Eik_LegemiddelMerkevare --> "0..1" Eik_LegemiddelMerkevare_Kryptert : KryptertId
+
+    object "Legemiddelpakning" as Eik_Legemiddelpakning {
+      🔑 Guid LegemiddelpakningId
+    }
+    Eik_Legemiddelpakning --> "0..1" Eik_Legemiddelpakning_Kryptert : KryptertId
+
+    object "LegemiddelVirkestoff" as Eik_LegemiddelVirkestoff {
+      🔑 Guid LegemiddelVirkestoffId
+    }
+    Eik_LegemiddelVirkestoff --> "0..1" Eik_LegemiddelVirkestoff_Kryptert : KryptertId
+
+    object "BestanddelLegemiddel" as Eik_BestanddelLegemiddel {
+      🔑 Guid BestanddelLegemiddelId
+    }
+    Eik_BestanddelLegemiddel --> Eik_Legemiddelblanding : LegemiddelblandingId
+    Eik_BestanddelLegemiddel --> "0..1" Eik_LegemiddelMerkevare : LegemiddelMerkevareId
+    Eik_BestanddelLegemiddel --> "0..1" Eik_Legemiddelpakning : LegemiddelpakningId
+    Eik_BestanddelLegemiddel --> "0..1" Eik_LegemiddelVirkestoff : LegemiddelVirkestoffId
+    
+
+
+    object "BestanddelVirkestoff" as Eik_BestanddelVirkestoff {
+      🔑 Guid BestanddelVirkestoffId
+    }
+    Eik_BestanddelVirkestoff --> Eik_Legemiddelblanding : LegemiddelblandingId
+}
+
+package FarmaPro {
+    object Hendelse {
+      🔑 Guid HendelseId
+    }
+    ' object UtleveringslagerFarmaproHendelse
+    ' Hendelse *-- UtleveringslagerFarmaproHendelse
+
+    object KundenavnFraApotek  #F0C0C0 {
+      🔑 Guid RekvisisjonsId
+    }
+    object Institusjon {
+      🔑 Guid RekvisisjonsId
+    }
+    KundenavnFraApotek --> Institusjon : RekvisisjonsId
+
+
+    object Rekvisisjon {
+      🔑 Guid RekvisisjonsId
+    }
+
+    Rekvisisjon --> Utleveringsmelding : MeldingsId
+    Institusjon --> Rekvisisjon : RekvisisjonsId
+
+    ' object RekvirentFraApotek
+    ' Rekvisisjon *-- RekvirentFraApotek
+    ' object Kunde
+    ' Rekvisisjon *-- Kunde
+
+
+    object RekvisisjonTilBehandling {
+      🔑 Guid RekvisisjonsId
+    }
+    RekvisisjonTilBehandling --> Utleveringsmelding : MeldingsId
+
+    object RekvisisjonUtleveringTilBehandling {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    RekvisisjonUtleveringTilBehandling --> Utleveringsmelding : MeldingsId
+
+    object ReseptUtleveringTilBehandling  #F0C0C0 {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    ReseptUtleveringTilBehandling --> Utleveringsmelding : MeldingsId
+
+
+    object UtleveringBasertPåRekvisisjon {
+      🔑 int UtleveringsId      
+    }
+    UtleveringBasertPåRekvisisjon --> Utlevering : UtleveringsId
+    'object UtlevertVare
+    'UtleveringBasertPåRekvisisjon *-- UtlevertVare
+
+    object Bruksveiledning #F0C0C0 {
+      🔑 int BruksveiledningId
+    }
+
+    ' object RekvirertVare
+    ' Resept *-- RekvirertVare
+    ' object RekvirentFraApotek
+    ' Resept *-- RekvirentFraApotek
+
+    object Apoteksystem {
+      🔑 Guid ApoteksystemId
+    }
+    object UtleveringTilDyr {
+      🔑 int UtleveringsId
+    }
+    UtleveringTilDyr --> Utlevering : UtleveringsId
+    UtleveringTilDyr --> Bruksveiledning : BruksveiledningId
+
+    ' object UtlevertVare
+    ' UtleveringTilDyr *-- UtlevertVare
+    ' object Resept
+    ' UtleveringTilDyr *-- Resept
+    ' object Dyreart
+    ' UtleveringTilDyr *-- Dyreart
+
+    object UtleveringTilMenneske {
+      🔑 int UtleveringsId      
+    }
+    UtleveringTilMenneske --> Utlevering : UtleveringsId
+    UtleveringTilMenneske --> Bruksveiledning : BruksveiledningId
+
+    ' UtleveringTilMenneske *-- UtlevertVare
+    ' UtleveringTilMenneske *-- PasientFraApotek
+    ' UtleveringTilMenneske *-- Resept
+
+    object Refusjon {
+      🔑 int UtleveringsId
+    }
+    Refusjon --> UtleveringTilMenneske : UtleveringsId
+}
+
+
+
+
+@enduml

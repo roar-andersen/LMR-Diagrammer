@@ -1,0 +1,149 @@
+@startuml
+
+center footer Sist oppdatert 10/3 2022
+
+object Apotek {
+    🔑 int Id
+}
+
+object ApotekApplikasjon {
+    🔑 int Id
+}
+
+object Avsendersystem {
+    🔑 int Id
+}
+
+object EikMelding {
+    🔑 Guid MeldingsId  
+}
+EikMelding --> "0..1" Avsendersystem : GenerertAvId
+EikMelding --> EikMeldingstype : MeldingstypeKode
+EikMelding --> "0..1" EikUtleveringsmelding : UtleveringsmeldingId
+EikMelding --> "0..1" MeldingStatus : StatusKode
+EikMelding --> "0..1" Pasientmelding : PasientmeldingId
+EikMelding --> "0..1" Rekvirentmelding : RekvirentmeldingId
+EikMelding --> "0..1" SletteArsak : SletteArsakKode
+EikMelding --> "0..1" StoppetArsak : StoppetArsakKode
+
+object EikMeldingstype {
+    🔑 int Kode
+}
+
+object EikUtleveringsmelding {
+    🔑 int Kode
+}
+
+object FarmaproLokalvaremelding {
+    🔑 int Kode
+}
+FarmaproLokalvaremelding --> ApotekApplikasjon : ApotekApplikasjonId
+
+object FarmaproMeldingsHash {
+    🔑 Guid MeldingsId
+}
+
+object FarmaproReseptmelding {
+    🔑 Guid MeldingsId
+}
+FarmaproReseptmelding --> "0..1" FarmaproUtleveringsmelding : UtleveringsmeldingId
+FarmaproReseptmelding --> MeldingStatus : StatusKode
+FarmaproReseptmelding --> "0..1" Pasientmelding : PasientmeldingId
+FarmaproReseptmelding --> "0..1" Rekvirentmelding : RekvirentmeldingId
+FarmaproReseptmelding --> "0..1" SletteArsak : SletteArsakKode
+FarmaproReseptmelding --> "0..1" StoppetArsak : StoppetArsakKode
+
+object FarmaproReseptmeldingDetaljer {
+    🔑 Guid MeldingsId
+}
+FarmaproReseptmeldingDetaljer --> Apotek : ApotekId
+FarmaproReseptmeldingDetaljer --> ApotekApplikasjon : ApotekApplikasjonId
+FarmaproReseptmeldingDetaljer --> FarmaproReseptmelding : MeldingsId
+
+object FarmaproReseptmeldingMigrert {
+    🔑 Guid MeldingsId
+}
+FarmaproReseptmeldingMigrert --> FarmaproReseptmelding : MeldingsId
+FarmaproReseptmeldingMigrert --> StatusFraReseptregisteret : StatusFraReseptregisteretKode
+
+object FarmaproUtleveringsdatoerMottatt {
+    🔑 int FarmaproUtleveringsdatoerMottattId
+} 
+
+object FarmaproUtleveringsmelding {
+    🔑 Guid MeldingsId
+}
+
+object Hendelse {
+    🔑 Guid HendelseId
+}
+
+
+object MeldingStatus {
+    🔑 int Kode
+}
+
+object Pasientmelding {
+    🔑 Guid MeldingsId
+}
+
+object Rekvirentmelding {
+    🔑 Guid MeldingsId
+}
+
+object SletteArsak {
+    🔑 int Kode
+}
+
+object StatusFraReseptregisteret {
+    🔑 int Kode
+}
+
+object StoppetArsak {
+    🔑 int Kode
+}
+
+object EikUtleveringsmeldingsinnhold #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+EikUtleveringsmeldingsinnhold --> EikUtleveringsmelding : MeldingsId
+
+object FarmaproKrypteringsnøkkel #F0C0C0 {
+    🔑 int Id
+}
+
+object FarmaproLokalvaremeldingsinnhold #F0C0C0 {
+    🔑 int LokalvaremeldingsId
+}
+FarmaproLokalvaremeldingsinnhold --> FarmaproLokalvaremelding : LokalvaremeldingsId
+
+object FarmaproUtleveringsmeldingInnhold #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+
+object KryptertEikMelding #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+KryptertEikMelding --> EikMelding : MeldingsId
+
+object KryptertFarmaproReseptmelding #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+KryptertFarmaproReseptmelding --> FarmaproReseptmelding : MeldingsId
+
+object PasientmeldingInnhold #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+PasientmeldingInnhold --> Pasientmelding : MeldingsId
+
+
+object RekvirentmeldingInnhold #F0C0C0 {
+    🔑 Guid MeldingsId
+}
+RekvirentmeldingInnhold --> Rekvirentmelding : MeldingsId
+
+object UgyldigEikMeldingInnhold #F0C0C0 {
+    🔑 int Id
+}
+
+@enduml

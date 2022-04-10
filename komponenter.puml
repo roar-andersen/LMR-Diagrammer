@@ -1,0 +1,95 @@
+@startuml 
+
+ ' left to right direction
+
+rectangle SikkerSone as "FHI sikker sone" #line.dotted {
+    component Kodeverk #line:black
+}
+
+rectangle NHN #line.dotted {
+    component Persontjenesten #line:black
+    component Helsepersonellregisteret  #line:black
+    component HelseID #line:black
+}
+
+rectangle Apoteksystemer as "Apoteksystemer (Capgemini)" #line.dotted {
+    queue FarmaPro #line:black
+    folder Eik #line:black
+}
+
+rectangle Azure #line.dotted {
+    folder AzureFilestore #line:black
+}
+
+rectangle Legemiddelverket #line.dotted {
+    component FEST as "Forskrivnings- og ekspedisjonsstøtte (FEST)" #line:black
+    component Apotekoversikt #line:black
+}
+
+rectangle Legemiddelregisteret #aliceblue;line:blue;line.dotted;text:blue {
+    component Apoteksimulator #line.dotted;line:blue
+    component Grunndata #line:royalblue
+    component Kontrollsiden #line:red
+    component Logging #line:black
+    component Meldingsformidler #line:darkgreen
+    component Meldingsmottak #line:greenyellow
+    component Pasientregister #line:darkgrey
+    component Rekvirentregister #line:purple
+    component Tilganger #line:darkorange
+    component Utleveringslager #line:gold
+    component Varseltjeneste #line:brown
+}
+
+
+/' ALLE SYNLIG '/
+Apoteksimulator --> AzureFilestore #line.dotted;line:blue
+Grunndata --> Apotekoversikt #line:royalblue
+Grunndata --> FEST #line:royalblue
+Grunndata --> Kodeverk #line:royalblue
+Kontrollsiden --> Grunndata #line:red
+Kontrollsiden --> HelseID #line:red
+Kontrollsiden --> Logging #line:red
+Kontrollsiden --> Meldingsmottak #line:red
+Kontrollsiden --> Tilganger #line:red
+Kontrollsiden --> Varseltjeneste #line:red
+Meldingsformidler --> Eik #line:green
+Meldingsformidler --> FarmaPro #line:green
+Meldingsformidler --> Meldingsmottak #line:darkgreen
+Meldingsformidler --> Pasientregister #line:darkgreen
+Meldingsformidler --> Rekvirentregister #line:darkgreen
+Meldingsformidler --> Utleveringslager #line:darkgreen
+Meldingsformidler --> AzureFilestore #line.dotted;line:darkgreen
+Meldingsmottak --> Grunndata #line:greenyellow
+Pasientregister --> Persontjenesten #line:darkgrey
+Rekvirentregister --> Helsepersonellregisteret #line:purple
+Utleveringslager --> Grunndata #line:gold
+Varseltjeneste --> Meldingsmottak #line:brown
+Varseltjeneste --> Utleveringslager #line:brown
+
+/' ALLE SKJULTE 
+Apoteksimulator -[hidden]- AzureFilestore
+Grunndata -[hidden]- Apotekoversikt
+Grunndata -[hidden]- FEST
+Grunndata -[hidden]- Kodeverk
+Kontrollsiden -[hidden]- Grunndata
+Kontrollsiden -[hidden]- HelseID
+Kontrollsiden -[hidden]- Logging
+Kontrollsiden -[hidden]- Meldingsmottak
+Kontrollsiden -[hidden]- Tilganger
+Kontrollsiden -[hidden]- Varseltjeneste
+Meldingsformidler -[hidden]- Eik
+Meldingsformidler -[hidden]- FarmaPro
+Meldingsformidler -[hidden]- Meldingsmottak
+Meldingsformidler -[hidden]- Pasientregister
+Meldingsformidler -[hidden]- Rekvirentregister
+Meldingsformidler -[hidden]- Utleveringslager    
+Meldingsformidler -[hidden]- AzureFilestore
+Meldingsmottak -[hidden]- Grunndata
+Pasientregister -[hidden]- Persontjenesten
+Rekvirentregister -[hidden]- Helsepersonellregisteret
+Utleveringslager -[hidden]- Grunndata
+Varseltjeneste -[hidden]- Meldingsmottak
+Varseltjeneste -[hidden]- Utleveringslager
+'/
+
+@enduml

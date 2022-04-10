@@ -1,0 +1,84 @@
+@startuml
+
+left to right direction
+
+package Felles {
+    object Utlevering {
+      🔑 int UtleveringsId
+    }
+    Utlevering --> Utleveringsmelding : MeldingsId
+
+    object Utleveringsmelding {
+      🔑 Guid MeldingsId
+    }
+}
+
+
+package Eik {
+    object "RekvisisjonAvventerProsessering" as Eik_RekvisisjonAvventerProsessering #F0C0C0 {
+      🔑 Guid RekvisisjonsId
+    }
+    Eik_RekvisisjonAvventerProsessering --> Utleveringsmelding : MeldingsId
+
+    object "UtleveringAvventerProsessering" as Eik_UtleveringAvventerProsessering #F0C0C0 {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    Eik_UtleveringAvventerProsessering --> Utleveringsmelding : MeldingsId
+
+    object "UtleveringTilMenneske" as Eik_UtleveringTilMenneske {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringTilMenneske --> Utlevering : UtleveringsId
+
+    object "UtleveringFraRekvisisjon" as Eik_UtleveringFraRekvisisjon {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringFraRekvisisjon --> Utlevering : UtleveringsId
+
+    object "UtleveringTilDyr" as Eik_UtleveringTilDyr {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringTilDyr --> Utlevering : UtleveringsId
+
+}
+
+package FarmaPro {
+    object RekvisisjonTilBehandling {
+      🔑 Guid RekvisisjonsId
+    }
+    RekvisisjonTilBehandling --> Utleveringsmelding : MeldingsId
+
+    object RekvisisjonUtleveringTilBehandling {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    RekvisisjonUtleveringTilBehandling --> Utleveringsmelding : MeldingsId
+
+    object ReseptUtleveringTilBehandling  #F0C0C0 {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    ReseptUtleveringTilBehandling --> Utleveringsmelding : MeldingsId
+
+
+    object UtleveringBasertPåRekvisisjon {
+      🔑 int UtleveringsId      
+    }
+    UtleveringBasertPåRekvisisjon --> Utlevering : UtleveringsId
+
+    object UtleveringTilDyr {
+      🔑 int UtleveringsId
+    }
+    UtleveringTilDyr --> Utlevering : UtleveringsId
+
+    object UtleveringTilMenneske {
+      🔑 int UtleveringsId      
+    }
+    UtleveringTilMenneske --> Utlevering : UtleveringsId
+}
+
+
+
+
+@enduml
