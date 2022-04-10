@@ -1,95 +1,116 @@
 @startuml 
-
  ' left to right direction
 
-rectangle SikkerSone as "FHI sikker sone" #line.dotted {
+rectangle SikkerSone as "FHI sikker sone" {
     component Kodeverk #line:black
 }
 
-rectangle NHN #line.dotted {
+rectangle NHN {
     component Persontjenesten #line:black
     component Helsepersonellregisteret  #line:black
     component HelseID #line:black
 }
 
-rectangle Apoteksystemer as "Apoteksystemer (Capgemini)" #line.dotted {
+rectangle Apoteksystemer as "Apoteksystemer (Capgemini)" {
     queue FarmaPro #line:black
     folder Eik #line:black
 }
 
 rectangle Azure #line.dotted {
-    folder AzureFilestore #line:black
+    folder AzureFilestore #line:black;line.dotted
 }
 
-rectangle Legemiddelverket #line.dotted {
+rectangle Legemiddelverket {
     component FEST as "Forskrivnings- og ekspedisjonsstøtte (FEST)" #line:black
     component Apotekoversikt #line:black
 }
 
-rectangle Legemiddelregisteret #aliceblue;line:blue;line.dotted;text:blue {
-    component Apoteksimulator #line.dotted;line:blue
-    component Grunndata #line:royalblue
-    component Kontrollsiden #line:red
-    component Logging #line:black
-    component Meldingsformidler #line:darkgreen
-    component Meldingsmottak #line:greenyellow
-    component Pasientregister #line:darkgrey
-    component Rekvirentregister #line:purple
-    component Tilganger #line:darkorange
-    component Utleveringslager #line:gold
-    component Varseltjeneste #line:brown
+!$SkjulEksterne=0
+!$SkjulPiler=0
+
+!if ($SkjulPiler) 
+    skinparam ComponentBorderColor black 
+    !$ApoteksimulatorStyle = "#line.dotted"
+    !$GrunndataStyle = ""
+    !$KontrollsidenStyle = ""
+    !$MeldingsformidlerStyle = ""
+    !$LoggingStyle = ""
+    !$MeldingsmottakStyle = ""
+    !$PasientregisterStyle = ""
+    !$RekvirentregisterStyle = ""
+    !$UtleveringslagerStyle = ""
+    !$TilgangerStyle = ""
+    !$VarseltjenesteStyle = ""
+!else
+    !$ApoteksimulatorStyle = "#line:blue;line.dotted"
+    !$GrunndataStyle = "#line:royalblue"
+    !$KontrollsidenStyle = "#line:red"
+    !$LoggingStyle = "#line:black"
+    !$MeldingsformidlerStyle = "#line:darkgreen"
+    !$MeldingsmottakStyle = "#line:greenyellow"
+    !$PasientregisterStyle = "#line:darkgrey"
+    !$RekvirentregisterStyle = "#line:purple"
+    !$TilgangerStyle = "#line:darkorange"
+    !$UtleveringslagerStyle = "#line:gold"
+    !$VarseltjenesteStyle = "#line:brown"
+!endif
+
+rectangle Legemiddelregisteret #aliceblue;line:blue;text:blue {
+    component Apoteksimulator $ApoteksimulatorStyle
+    component Grunndata $GrunndataStyle
+    component Kontrollsiden $KontrollsidenStyle
+    component Logging $LoggingStyle
+    component Meldingsformidler $MeldingsformidlerStyle 
+    component Meldingsmottak $MeldingsmottakStyle
+    component Pasientregister $PasientregisterStyle
+    component Rekvirentregister $RekvirentregisterStyle
+    component Tilganger $TilgangerStyle
+    component Utleveringslager $UtleveringslagerStyle
+    component Varseltjeneste $VarseltjenesteStyle
 }
 
+/' Skjul eksterne'/
+!if ($SkjulEksterne) 
+    hide Kodeverk
+    hide Persontjenesten
+    hide Helsepersonellregisteret
+    hide HelseID
+    hide FarmaPro
+    hide Eik
+    hide AzureFilestore
+    hide FEST
+    hide Apotekoversikt
+!endif
 
-/' ALLE SYNLIG '/
-Apoteksimulator --> AzureFilestore #line.dotted;line:blue
-Grunndata --> Apotekoversikt #line:royalblue
-Grunndata --> FEST #line:royalblue
-Grunndata --> Kodeverk #line:royalblue
-Kontrollsiden --> Grunndata #line:red
-Kontrollsiden --> HelseID #line:red
-Kontrollsiden --> Logging #line:red
-Kontrollsiden --> Meldingsmottak #line:red
-Kontrollsiden --> Tilganger #line:red
-Kontrollsiden --> Varseltjeneste #line:red
-Meldingsformidler --> Eik #line:green
-Meldingsformidler --> FarmaPro #line:green
-Meldingsformidler --> Meldingsmottak #line:darkgreen
-Meldingsformidler --> Pasientregister #line:darkgreen
-Meldingsformidler --> Rekvirentregister #line:darkgreen
-Meldingsformidler --> Utleveringslager #line:darkgreen
-Meldingsformidler --> AzureFilestore #line.dotted;line:darkgreen
-Meldingsmottak --> Grunndata #line:greenyellow
-Pasientregister --> Persontjenesten #line:darkgrey
-Rekvirentregister --> Helsepersonellregisteret #line:purple
-Utleveringslager --> Grunndata #line:gold
-Varseltjeneste --> Meldingsmottak #line:brown
-Varseltjeneste --> Utleveringslager #line:brown
 
-/' ALLE SKJULTE 
-Apoteksimulator -[hidden]- AzureFilestore
-Grunndata -[hidden]- Apotekoversikt
-Grunndata -[hidden]- FEST
-Grunndata -[hidden]- Kodeverk
-Kontrollsiden -[hidden]- Grunndata
-Kontrollsiden -[hidden]- HelseID
-Kontrollsiden -[hidden]- Logging
-Kontrollsiden -[hidden]- Meldingsmottak
-Kontrollsiden -[hidden]- Tilganger
-Kontrollsiden -[hidden]- Varseltjeneste
-Meldingsformidler -[hidden]- Eik
-Meldingsformidler -[hidden]- FarmaPro
-Meldingsformidler -[hidden]- Meldingsmottak
-Meldingsformidler -[hidden]- Pasientregister
-Meldingsformidler -[hidden]- Rekvirentregister
-Meldingsformidler -[hidden]- Utleveringslager    
-Meldingsformidler -[hidden]- AzureFilestore
-Meldingsmottak -[hidden]- Grunndata
-Pasientregister -[hidden]- Persontjenesten
-Rekvirentregister -[hidden]- Helsepersonellregisteret
-Utleveringslager -[hidden]- Grunndata
-Varseltjeneste -[hidden]- Meldingsmottak
-Varseltjeneste -[hidden]- Utleveringslager
-'/
+!if ($SkjulPiler)
+    !$pil = "-[hidden]-"
+!else
+    !$pil = "-->"
+!endif
+
+Apoteksimulator $pil AzureFilestore $ApoteksimulatorStyle
+Grunndata $pil Apotekoversikt $GrunndataStyle
+Grunndata $pil FEST $GrunndataStyle
+Grunndata $pil Kodeverk $GrunndataStyle
+Kontrollsiden $pil Grunndata $KontrollsidenStyle
+Kontrollsiden $pil HelseID $KontrollsidenStyle
+Kontrollsiden $pil Logging $KontrollsidenStyle
+Kontrollsiden $pil Meldingsmottak $KontrollsidenStyle
+Kontrollsiden $pil Tilganger $KontrollsidenStyle
+Kontrollsiden $pil Varseltjeneste $KontrollsidenStyle
+Meldingsformidler $pil Eik $MeldingsformidlerStyle
+Meldingsformidler $pil FarmaPro $MeldingsformidlerStyle
+Meldingsformidler $pil Meldingsmottak $MeldingsformidlerStyle
+Meldingsformidler $pil Pasientregister $MeldingsformidlerStyle
+Meldingsformidler $pil Rekvirentregister $MeldingsformidlerStyle
+Meldingsformidler $pil Utleveringslager $MeldingsformidlerStyle
+Meldingsformidler $pil AzureFilestore $MeldingsformidlerStyle
+Meldingsmottak $pil Grunndata $MeldingsmottakStyle
+Pasientregister $pil Persontjenesten $MeldingsmottakStyle
+Rekvirentregister $pil Helsepersonellregisteret $RekvirentregisterStyle
+Utleveringslager $pil Grunndata $UtleveringslagerStyle
+Varseltjeneste $pil Meldingsmottak $VarseltjenesteStyle
+Varseltjeneste $pil Utleveringslager $VarseltjenesteStyle
 
 @enduml
