@@ -1,23 +1,11 @@
 @startuml Utleveringslager
 
-' left to right direction
+left to right direction
 
 !$DetaljertVisning=0
 
 
 package Felles {
-  
-    !if ($DetaljertVisning)
-      object Klassifikasjon {
-        🔑 int KlassifikasjonId      
-      }
-
-    object KodeverkKode {
-      🔑 int KodeverkKodeId      
-    }
-
-    !endif
-
     object PasientlisteTilBehandling {
       🔑 Guid MeldingsId
     }
@@ -33,55 +21,124 @@ package Felles {
     object Utlevering {
       🔑 int UtleveringsId
     }
-    Utlevering --> Utleveringsmelding
+    Utlevering --> "1" Utleveringsmelding
 }
 
 
 package Eik {
+    object "RekvisisjonTilBehandling" as Eik_RekvisisjonTilBehandling #F0C0C0 {
+      🔑 Guid RekvisisjonsId
+    }
+    Eik_RekvisisjonTilBehandling --> "1" Utleveringsmelding
+
+    object "UtleveringTilBehandling" as Eik_UtleveringTilBehandling #F0C0C0 {
+      🔑 Guid MeldingsId
+      🔑 int UtleveringsnummerIMelding
+    }
+    Eik_UtleveringTilBehandling --> "1" Utleveringsmelding
+
+    object "UtleveringFraRekvisisjon" as Eik_UtleveringFraRekvisisjon {
+      🔑 int UtleveringsId
+    }
+    Eik_UtleveringFraRekvisisjon --> "1" Utlevering
+
+    !if ($DetaljertVisning)
+        object "UtlevertVare" as Eik_UtlevertVare {
+        🔑 int UtlevertVareId
+      }
+
+      object "InstitusjonsIdentitet" as Eik_InstitusjonsIdentitet {
+        🔑 int InstitusjonsIdentitetId
+      }
+
+      object "Rekvisisjon" as Eik_Rekvisisjon {
+        🔑 Guid RekvisisjonId
+      }
+      Eik_Rekvisisjon --> "0..*" Eik_InstitusjonsIdentitet
+      Eik_UtleveringFraRekvisisjon --> "1" Eik_UtlevertVare
+    !endif
+
 
     object "UtleveringTilDyr" as Eik_UtleveringTilDyr {
       🔑 int UtleveringsId
     }
-    Eik_UtleveringTilDyr --> Utlevering
+    Eik_UtleveringTilDyr --> "1" Utlevering
 
     !if ($DetaljertVisning)
-      Eik_UtleveringTilDyr --> Eik_UtlevertVare
-      Eik_UtleveringTilDyr --> Eik_Resept
-      Eik_UtleveringTilDyr --> Eik_UtleveringTil_Kryptert
-      Eik_UtleveringTilDyr --> Eik_Apoteksystem
+      object "Apoteksystem" as Eik_Apoteksystem {
+        🔑 int ApoteksystemId
+      }
+      object "Resept" as Eik_Resept {
+        🔑 int ReseptId
+      }
+      object "UtleveringTilDyr_Kryptert" as Eik_UtleveringTilDyr_Kryptert #F0C0C0 {
+        🔑 int UtleveringTilDyrUtleveringsId
+      }
+      Eik_UtleveringTilDyr --> "1" Eik_UtlevertVare
+      Eik_UtleveringTilDyr --> "0..1" Eik_Resept
+      Eik_UtleveringTilDyr *-- Eik_UtleveringTilDyr_Kryptert
+      Eik_UtleveringTilDyr --> "0..1" Eik_Apoteksystem
     !endif
-
 
     object "UtleveringTilMenneske" as Eik_UtleveringTilMenneske {
       🔑 int UtleveringsId
     }
-    Eik_UtleveringTilMenneske --> Utlevering
+    Eik_UtleveringTilMenneske --> "1" Utlevering
 
     !if ($DetaljertVisning)
-      Eik_UtleveringTilMenneske --> Eik_Apoteksystem
-      Eik_UtleveringTilMenneske --> Eik_UtlevertVare
-      Eik_UtleveringTilMenneske --> Eik_PasientFraApotek
-      Eik_UtleveringTilMenneske --> Eik_UtleveringTilMenneske_Kryptert
-      Eik_UtleveringTilMenneske --> Eik_Resept
-      Eik_UtleveringTilMenneske --> Eik_Refusjon
-
       object "Refusjon" as Eik_Refusjon {
         🔑 int UtleveringsId
       } 
+
+      object "PasientFraApotek" as Eik_PasientFraApotek {
+        🔑 int PasientFraApotekId
+      }
+
+      object "UtleveringTilMenneske_Kryptert" as Eik_UtleveringTilMenneske_Kryptert #F0C0C0 {
+        🔑 int UtleveringTilMenneskeUtleveringsId
+      }
+
+      Eik_UtleveringTilMenneske --> "0..1" Eik_Apoteksystem
+      Eik_UtleveringTilMenneske --> "1" Eik_UtlevertVare
+      Eik_UtleveringTilMenneske --> "0..1" Eik_PasientFraApotek
+      Eik_UtleveringTilMenneske *-- Eik_UtleveringTilMenneske_Kryptert
+      Eik_UtleveringTilMenneske --> "0..1" Eik_Resept
+      Eik_UtleveringTilMenneske --> Eik_Refusjon
     !endif
 
     !if ($DetaljertVisning)
+      object "BestanddelAnnet_Kryptert" as Eik_BestanddelAnnet_Kryptert #F0C0C0 {
+        🔑 int BestanddelAnnetId
+      }
+
       object "BestanddelAnnet" as Eik_BestanddelAnnet {
         🔑 int BestanddelAnnetId
       }
-      Eik_BestanddelAnnet --> Eik_BestanddelAnnet_Kryptert
+      Eik_BestanddelAnnet *-- Eik_BestanddelAnnet_Kryptert
+
+      object "LegemiddelMerkevare" as Eik_LegemiddelMerkevare {
+        🔑 int LegemiddelMerkevareId
+      }
+
+      object "Legemiddelpakning_Kryptert" as Eik_Legemiddelpakning_Kryptert #F0C0C0 {
+        🔑 int LegemiddelpakningId
+      }
+
+      object "Legemiddelpakning" as Eik_Legemiddelpakning {
+        🔑 int LegemiddelpakningId
+      }
+      Eik_Legemiddelpakning *-- Eik_Legemiddelpakning_Kryptert
+
+      object "LegemiddelVirkestoff" as Eik_LegemiddelVirkestoff {
+      🔑 int LegemiddelVirkestoffId
+      }
 
       object "BestanddelLegemiddel" as Eik_BestanddelLegemiddel {
         🔑 int BestanddelLegemiddelId
       }
-      Eik_BestanddelLegemiddel --> Eik_LegemiddelMerkevare
-      Eik_BestanddelLegemiddel --> Eik_LegemiddelVirkestoff
-      Eik_BestanddelLegemiddel --> Eik_Legemiddelpakning
+      Eik_BestanddelLegemiddel --> "0..1" Eik_LegemiddelMerkevare
+      Eik_BestanddelLegemiddel --> "0..1" Eik_LegemiddelVirkestoff
+      Eik_BestanddelLegemiddel --> "0..1" Eik_Legemiddelpakning
 
 
       object "BestanddelVirkestoff" as Eik_BestanddelVirkestoff {
@@ -89,174 +146,62 @@ package Eik {
       }
     !endif
 
-
     !if ($DetaljertVisning)
-      object "Apoteksystem" as Eik_Apoteksystem {
-        🔑 int ApoteksystemId
-      }
-
-    object "PasientFraApotek" as Eik_PasientFraApotek {
-      🔑 int PasientFraApotekId
-    }
-    !endif
-
-
-    !if ($DetaljertVisning)
-      object "LegemiddelMerkevare" as Eik_LegemiddelMerkevare {
-        🔑 int LegemiddelMerkevareId
-      }
-      Eik_LegemiddelMerkevare --> Eik_LegemiddelMerkevare_Kryptert
-
       object "LegemiddelMerkevare_Kryptert" as Eik_LegemiddelMerkevare_Kryptert #F0C0C0 {
         🔑 int LegemiddelMerkevareId
       }
-
-      object "Legemiddelpakning" as Eik_Legemiddelpakning {
-        🔑 int LegemiddelpakningId
-      }
-      Eik_Legemiddelpakning --> Eik_Legemiddelpakning_Kryptert
-
-      object "Legemiddelpakning_Kryptert" as Eik_Legemiddelpakning_Kryptert #F0C0C0 {
-        🔑 int LegemiddelpakningId
-      }
-
-      object "LegemiddelVirkestoff" as Eik_LegemiddelVirkestoff {
-      🔑 int LegemiddelVirkestoffId
-      }
-      Eik_LegemiddelVirkestoff --> Eik_LegemiddelVirkestoff_Kryptert
+      Eik_LegemiddelMerkevare *-- Eik_LegemiddelMerkevare_Kryptert
 
       object "LegemiddelVirkestoff_Kryptert" as Eik_LegemiddelVirkestoff_Kryptert #F0C0C0 {
         🔑 int LegemiddelVirkestoffId
       }
+      Eik_LegemiddelVirkestoff *-- Eik_LegemiddelVirkestoff_Kryptert
 
+      object "Legemiddelblanding_Kryptert" as Eik_Legemiddelblanding_Kryptert #F0C0C0 {
+        🔑 int LegemiddelblandingId
+      }
+
+      object "Legemiddelblanding" as Eik_Legemiddelblanding {
+      🔑 int LegemiddelblandingId
+      }
+      Eik_Legemiddelblanding *-- Eik_Legemiddelblanding_Kryptert
+      Eik_Legemiddelblanding --> "0..*" Eik_BestanddelAnnet
+      Eik_Legemiddelblanding --> "0..*" Eik_BestanddelVirkestoff
+      Eik_Legemiddelblanding --> "0..*" Eik_BestanddelLegemiddel
     !endif
 
     !if ($DetaljertVisning)
+      object "Resept_RekvirertVare_Kryptert" as Eik_Resept_RekvirertVare_Kryptert #F0C0C0 {
+        🔑 int RekvirertVareReseptId
+      }
+      Eik_Resept *-- Eik_Resept_RekvirertVare_Kryptert
 
-    object "Resept" as Eik_Resept {
-      🔑 int ReseptId
-    }
-    Eik_Resept *-- Eik_Resept_RekvirertVare_Kryptert
+      object "Lokalvare_Kryptert" as Eik_Lokalvare_Kryptert #F0C0C0 {
+        🔑 int LokalvareId
+      }
 
-    object "Resept_RekvirertVare_Kryptert" as Eik_Resept_RekvirertVare_Kryptert #F0C0C0 {
-      🔑 int RekvirertVareReseptId
-    }
+      object "Lokalvare" as Eik_Lokalvare {
+        🔑 int LokalvareId
+      }
 
+      Eik_Lokalvare *-- Eik_Lokalvare_Kryptert
+      Eik_UtlevertVare --> "0..1" Eik_Lokalvare
+      Eik_UtlevertVare --> "0..1" Eik_Legemiddelblanding
 
+      Eik_Rekvisisjon --> "0..1" Eik_Apoteksystem
+      Eik_Rekvisisjon --> "0..*" Eik_UtleveringFraRekvisisjon
     !endif
-
-'Resept
-'UtlevertVare
-'Rekvisisjon
-'Legemiddelblanding
-'Lokalvare
-'InstitusjonsIdentitet
-'UtleveringFraRekvisisjon
-'
-'Kryptert:
-'Legemiddelblanding_Kryptert
-'Lokalvare_Kryptert
-'UtleveringTilDyr_Kryptert
-'UtleveringTilMenneske_Kryptert
-'BestanddelAnnet_Kryptert
-'LegemiddelVirkestoff_Kryptert
-'.Resept_RekvirertVare_Kryptert
-'RekvisisjonTilBehandling
-'UtleveringTilBehandling
-
-
-
-
-
-    object "BestanddelAnnet_Kryptert" as Eik_BestanddelAnnet_Kryptert #F0C0C0 {
-      🔑 Guid KryptertId
-    }
-
-    object "Legemiddelblanding_Kryptert" as Eik_Legemiddelblanding_Kryptert #F0C0C0 {
-      🔑 Guid KryptertId
-    }
-
-
-
-
-    object "Lokalvare_Kryptert" as Eik_Lokalvare_Kryptert #F0C0C0 {
-      🔑 Guid KryptertId
-    }
-
-    object "RekvisisjonAvventerProsessering" as Eik_RekvisisjonAvventerProsessering #F0C0C0 {
-      🔑 Guid RekvisisjonsId
-    }
-    Eik_RekvisisjonAvventerProsessering --> Utleveringsmelding : MeldingsId
-
-    object "UtleveringAvventerProsessering" as Eik_UtleveringAvventerProsessering #F0C0C0 {
-      🔑 Guid MeldingsId
-      🔑 int UtleveringsnummerIMelding
-    }
-    Eik_UtleveringAvventerProsessering --> Utleveringsmelding : MeldingsId
-
-    object "UtleveringTil_Kryptert" as Eik_UtleveringTil_Kryptert #F0C0C0 {
-      🔑 Guid KryptertId
-    }
-
-    object "Legemiddelblanding" as Eik_Legemiddelblanding {
-      🔑 Guid LegemiddelblandingId
-    }
-    Eik_Legemiddelblanding --> Eik_Legemiddelblanding_Kryptert : KryptertFeltId
-
-
-    object "Lokalvare" as Eik_Lokalvare {
-      🔑 Guid LokalvareId
-    }
-    Eik_Lokalvare --> Eik_Lokalvare_Kryptert : KryptertId
-
-    object "UtlevertVare" as Eik_UtlevertVare {
-      🔑 Guid UtlevertVareId
-    }
-    Eik_UtlevertVare --> "0..1" Eik_Lokalvare : LokalvareId
-    Eik_UtlevertVare --> "0..1" Eik_Legemiddelblanding : LegemiddelblandingId
-
-
-    object "Rekvisisjon" as Eik_Rekvisisjon {
-      🔑 Guid RekvisisjonId
-    }
-    Eik_Rekvisisjon --> "0..1" Eik_Apoteksystem : ApoteksystemId
-
-    object "InstitusjonsIdentitet" as Eik_InstitusjonsIdentitet {
-      🔑 Guid InstitusjonsIdentitetId
-    }
-    Eik_InstitusjonsIdentitet --> "0..1" Eik_Rekvisisjon : RekvisisjonId
-
-
-    object "Kodeverk_FeltOid" as Eik_Kodeverk_FeltOid {
-      🔑 string Feltnavn
-      🔑 int OId
-    }
-
-
-
-
-    object "UtleveringFraRekvisisjon" as Eik_UtleveringFraRekvisisjon {
-      🔑 int UtleveringsId
-    }
-    Eik_UtleveringFraRekvisisjon --> Utlevering : UtleveringsId
-    Eik_UtleveringFraRekvisisjon --> Eik_Rekvisisjon : RekvisisjonId
-    Eik_UtleveringFraRekvisisjon --> Eik_UtlevertVare : UtlevertVareId
-
-
-
-    
-
-
 }
 
 
 package FarmaPro {
 
   !if ($DetaljertVisning)
+    object UtleveringslagerFarmaproHendelse
+
     object Hendelse {
       🔑 Guid HendelseId
     }
-    object UtleveringslagerFarmaproHendelse
     Hendelse *-- UtleveringslagerFarmaproHendelse
 
     object Refusjon {
@@ -270,24 +215,24 @@ package FarmaPro {
     object Institusjon {
       🔑 Guid RekvisisjonsId
     }
-    Institusjon --> KundenavnFraApotek : RekvisisjonsId
+    Institusjon --> "0..1" KundenavnFraApotek
   !endif
 
     object Rekvisisjon {
       🔑 Guid RekvisisjonsId
     }
-    Rekvisisjon --> Utleveringsmelding
+    Rekvisisjon --> "1" Utleveringsmelding
 
     !if ($DetaljertVisning)
       object RekvirentFraApotek
       Rekvisisjon *-- RekvirentFraApotek
-      Rekvisisjon --> Institusjon
+      Rekvisisjon --> "0..1" Institusjon
     !endif
 
     object UtleveringTilDyr {
       🔑 int UtleveringsId
     }
-    UtleveringTilDyr --> Utlevering
+    UtleveringTilDyr --> "1" Utlevering
     !if ($DetaljertVisning)
       object UtlevertVare
       UtleveringTilDyr *-- UtlevertVare
@@ -295,40 +240,46 @@ package FarmaPro {
       UtleveringTilDyr *-- Resept
       object Dyreart
       UtleveringTilDyr *-- Dyreart
-      object BruksveiledningTilDyr #F0C0C0
+      object BruksveiledningTilDyr #F0C0C0 {
+        🔑 int UtleveringTilDyrUtleveringsId
+      }
       UtleveringTilDyr *-- BruksveiledningTilDyr
     !endif
 
       object UtleveringTilMenneske {
         🔑 int UtleveringsId      
       }
-      UtleveringTilMenneske --> Utlevering
+      UtleveringTilMenneske --> "1" Utlevering
 
     !if ($DetaljertVisning)
       UtleveringTilMenneske *-- UtlevertVare
-      object PasientFraApotek
+      
+      object PasientFraApotek      
       UtleveringTilMenneske *-- PasientFraApotek
       UtleveringTilMenneske *-- Resept    
-      UtleveringTilMenneske --> Refusjon
-      object BruksveiledningTilMenneske #F0C0C0
+      UtleveringTilMenneske --> "0..1" Refusjon
+
+      object BruksveiledningTilMenneske #F0C0C0 {
+        🔑 int UtleveringTilMenneskeUtleveringsId
+      }
       UtleveringTilMenneske *-- BruksveiledningTilMenneske
     !endif
 
     object RekvisisjonTilBehandling {
       🔑 Guid RekvisisjonsId
     }
-    RekvisisjonTilBehandling --> Utleveringsmelding
+    RekvisisjonTilBehandling --> "1" Utleveringsmelding
 
     object RekvisisjonUtleveringTilBehandling {
       🔑 Guid MeldingsId
       🔑 int UtleveringsnummerIMelding
     }
-    RekvisisjonUtleveringTilBehandling --> Utleveringsmelding
+    RekvisisjonUtleveringTilBehandling --> "1" Utleveringsmelding
 
     object UtleveringBasertPåRekvisisjon {
       🔑 int UtleveringsId      
     }
-    UtleveringBasertPåRekvisisjon --> Utlevering
+    UtleveringBasertPåRekvisisjon --> "1" Utlevering
 
     !if ($DetaljertVisning)
       UtleveringBasertPåRekvisisjon *-- UtlevertVare
@@ -338,11 +289,7 @@ package FarmaPro {
       🔑 Guid MeldingsId
       🔑 int UtleveringsnummerIMelding
     }
-    ReseptUtleveringTilBehandling --> Utleveringsmelding
-
+    ReseptUtleveringTilBehandling --> "1" Utleveringsmelding
 }
-
-
-
 
 @enduml
